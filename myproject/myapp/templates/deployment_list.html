@@ -1,0 +1,129 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deployments</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: left; /* Align text to the left within the container */
+            margin-bottom: 10px; /* Add some space between the heading and the table */
+            color: #333;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-container {
+            width: 80%; /* Match the width of the table */
+            margin: 0 auto; /* Center the container */
+        }
+
+        th, td {
+            text-align: left;
+        }
+        
+        td {
+            padding: 2px;
+            color: black;
+            font-size: 15px;
+            text-align: left;
+            
+        }
+
+        th {
+            background-color: #e6dcc1;
+            color: black;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0f7e9;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .status-queued {
+            color: blue;
+        }
+        .status-building {
+            color: darkorange;
+        }
+        .status-deployed {
+            color: black;
+        }
+        .status-failed {
+            color: red;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h1>Deployments</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>VM Count</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Created on</th>
+                <th>Details</th>
+            </tr>
+            {% for deployment in deployments %}
+            <tr> 
+                <td>{{ deployment.deployment_name }}</td>
+                <td>{{ deployment.owner_value }}</td>
+                <td>{{ deployment.deployment_count }}</td>
+                <td>{{ deployment.server_type_value }}</td>
+                <td class="
+                    {% if deployment.status == 'queued' %}
+                        status-queued
+                    {% elif deployment.status == 'failed' %}
+                        status-failed
+                    {% elif deployment.status == 'building' %}
+                        status-building
+                    {% elif deployment.status == 'deployed' %}
+                        status-deployed
+                    {% endif %}
+                ">
+                    {{ deployment.status }}
+                </td>
+                <td>{{ deployment.created_at }}</td>
+                <td ><a href="{% url 'deployment_detail' deployment.id %}">Details</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+
